@@ -16,8 +16,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://coder.com/install.sh | sh
 
 # Create a non-root user
-RUN useradd -m -s /bin/bash coder && \
-    echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN echo "coder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER coder
 WORKDIR /home/coder

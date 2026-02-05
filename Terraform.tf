@@ -73,3 +73,34 @@ resource "railway_tcp_proxy" "codeserver_proxy" {
 
   depends_on = [railway_service.codeserver]
 }
+
+# code-server
+resource "coder_app" "code-server" {
+  agent_id     = coder_agent.main.id
+  slug         = "code-server"
+  display_name = "code-server"
+  icon         = "/icon/code.svg"
+  url          = "https://${railway_tcp_proxy.codeserver_proxy.domain}:${railway_tcp_proxy.codeserver_proxy.proxy_port}/?folder=/home/coder"
+  subdomain    = false
+  share        = "owner"
+
+  healthcheck {
+    url       = "https://${railway_tcp_proxy.codeserver_proxy.domain}:${railway_tcp_proxy.codeserver_proxy.proxy_port}/healthz"
+    interval  = 3
+    threshold = 10
+  }
+}
+
+resource "coder_metadata" "railway_url" {
+  resource_id = railway_service.codeserver.id
+  
+  item {
+    key   = "Railway URL"
+    value = "${railway_tcp_proxy.codeserver_proxy.domain}:${railway_tcp_proxy.codeserver_proxy.proxy_port}"
+  }
+
+  item{
+    key   = "Init Script"
+    value = "run => eval $ {CODER_INIT_SCRIPT} > coder_init.log 2>&1 &"
+  }
+}

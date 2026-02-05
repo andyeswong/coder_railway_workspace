@@ -46,8 +46,5 @@ resource "railway_service" "codeserver" {
   name         = "coder-${lower(data.coder_workspace.me.name)}-${lower(data.coder_workspace_owner.me.name)}"
   project_id   = "64211a28-8a9b-4f5b-a740-deabe67017e1"
   source_image = "andyeswong/coder-workspace:stable"
-  env_vars = {
-    "CODER_AGENT_INIT_SCRIPT" = coder_agent.main.init_script
-  }
 }
 

@@ -23,6 +23,23 @@ RUN useradd --groups sudo --no-create-home --shell /bin/bash ${USER} && \
 # Pre-install Coder CLI to speed up agent startup
 RUN curl -fsSL https://coder.com/install.sh | sh
 
+# Pre-install code-server to speed up agent startup
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+# Run the code-server in port 13337 wihth no-auth for Coder to manage authentication
+RUN mkdir -p /home/${USER}/.config/code-server && \
+    echo "bind-addr: 0.0.0.0:13337" > /home/${USER}/.config/code-server/config.yaml && \
+    echo "auth: none" >> /home/${USER}/.config/code-server/config.yaml && \
+    chown -R ${USER}:${USER} /home/${USER}/.config
+
+# run code-server as coder user
+USER ${USER}
+WORKDIR /home/${USER}
+# Verify installations
+RUN coder --version && code-server --version
+RUN code-server 
+
+
 # Copy Railway config and entrypoint script
 COPY railway.json /railway.json
 COPY entrypoint.sh /entrypoint.sh

@@ -32,13 +32,6 @@ RUN mkdir -p /home/${USER}/.config/code-server && \
     echo "auth: none" >> /home/${USER}/.config/code-server/config.yaml && \
     chown -R ${USER}:${USER} /home/${USER}/.config
 
-# run code-server as coder user
-USER ${USER}
-WORKDIR /home/${USER}
-# Verify installations
-RUN coder --version && code-server --version
-RUN code-server 
-
 
 # Copy Railway config and entrypoint script
 COPY railway.json /railway.json

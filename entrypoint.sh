@@ -13,4 +13,4 @@ echo "CODER_DERP_FORCE_WEBSOCKETS: $CODER_DERP_FORCE_WEBSOCKETS"
 
 # Execute the init script
 # The init script will handle downloading and starting the agent
-code-server --no-auth --port 13337
+code-server 

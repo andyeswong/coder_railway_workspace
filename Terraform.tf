@@ -45,6 +45,7 @@ resource "coder_agent" "main" {
 resource "railway_service" "codeserver" {
   name         = "coder-${lower(data.coder_workspace.me.name)}-${lower(data.coder_workspace_owner.me.name)}"
   project_id   = "64211a28-8a9b-4f5b-a740-deabe67017e1"
-  source_image = "andyeswong/coder-workspace:stable"
+  source_repo = "andyeswong/coder_railway_workspace"
+  source_repo_branch = "main"
 }
 

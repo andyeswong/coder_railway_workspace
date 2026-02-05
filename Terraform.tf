@@ -49,3 +49,27 @@ resource "railway_service" "codeserver" {
   source_repo_branch = "main"
 }
 
+resource "railway_variable_collection" "codeserver_agent_token" {
+  environment_id = "c7b6f1b3-bfcc-4e21-ab76-fe900a62d432"
+  service_id     = railway_service.codeserver.id
+  variables = [
+    {
+      name  = "CODER_AGENT_TOKEN"
+      value = coder_agent.main.token
+    },
+    {
+      name  = "CODER_INIT_SCRIPT"
+      value = coder_agent.main.init_script
+    }
+  ]
+  
+  depends_on = [railway_service.codeserver]
+}
+
+resource "railway_tcp_proxy" "codeserver_proxy" {
+  environment_id = "c7b6f1b3-bfcc-4e21-ab76-fe900a62d432"
+  service_id     = railway_service.codeserver.id
+  application_port           = 13337
+
+  depends_on = [railway_service.codeserver]
+}
